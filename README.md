@@ -17,6 +17,28 @@ A simple Terminal and SSH Command Shortcut Menu Bar App for built for MacOS Vent
 
 <a href="https://www.buymeacoffee.com/dieskim" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
+#### iTerm Profile Integration
+
+When using iTerm, you can specify which profile to use by adding the `--profile` flag to your SSH command. This is helpful if you maintain different profiles for various environments (like production, staging, etc.).
+
+For example, if you have an iTerm profile named "Production" configured with specific settings for production servers, you can reference it in your configuration like this:
+
+```json
+{
+  "terminal": "iTerm",  // Supported terminals: 'Terminal' or 'iTerm' (recommended)
+  "data": [
+    {
+      "action": [
+        {
+          "name": "Action1",
+          "command": "ssh admin@host.com --profile Production"
+        }
+      ]
+    }
+  ]
+}
+```
+
 ## Credits
 
 MenuBarSSHCommands was inspired by [Shuttle](https://github.com/fitztrev/shuttle) and [SSHMenu](http://sshmenu.sourceforge.net/), the GNOME applet for Linux.
