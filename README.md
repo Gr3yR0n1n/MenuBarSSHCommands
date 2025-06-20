@@ -6,7 +6,7 @@ A simple Terminal and SSH Command Shortcut Menu Bar App for built for MacOS Vent
 ## Installation
 
 1. Clone repo from https://github.com/gr3yR0n1n/MenuBarSSHCommands
-2. Build Product 
+2. Build MenuBarSSHCommand
 3. Move MenuBarSSHCommands.app to Applications
 4. Open MenuBarSSHCommands App
 5. Edit the JSON as required (via clicking Edit in the MenuBarSSHCommands app in the Menu Bar)
