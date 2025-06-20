@@ -146,15 +146,19 @@ struct MenuBarSSHCommandsApp: App {
     private func executeCommand(_ command: String) {
         let terminal = buttonContainerStore.terminal
         var source: String
+        var profile: String = "Default"
+
+        let modifiedCommand = removeProfileParameter(from: command, profile: &profile)
+
         if terminal == "iTerm" {
             source = """
             if application "\(terminal)" is running then
                 tell application "\(terminal)"
                     activate
-                    tell (create window with default profile)
+                    tell (create window with profile "\(profile)")
                         delay 0.2 -- Wait for the terminal to launch
                         tell current session
-                            write text "\(command)"
+                            write text "\(modifiedCommand)"
                         end tell
                     end tell
                 end tell
@@ -164,7 +168,7 @@ struct MenuBarSSHCommandsApp: App {
                     delay 0.5 -- Wait for the terminal to launch
                     tell current window
                         tell current session
-                            write text "\(command)"
+                            write text "\(modifiedCommand)"
                         end tell
                     end tell
                 end tell
@@ -175,16 +179,16 @@ struct MenuBarSSHCommandsApp: App {
             if application "\(terminal)" is not running then
                 tell application "\(terminal)"
                     activate
-                    do script "\(command)"
+                    do script "\(modifiedCommand)"
                 end tell
             else
                 tell application "\(terminal)"
                     if (count windows) > 0 then
                         tell front window
-                            do script "\(command)"
+                            do script "\(modifiedCommand)"
                         end tell
                     else
-                        do script "\(command)"
+                        do script "\(modifiedCommand)"
                     end if
                     activate
                 end tell
@@ -216,6 +220,27 @@ struct MenuBarSSHCommandsApp: App {
         }
         
         NSWorkspace.shared.open(url)
+    }
+
+    private func removeProfileParameter(from command: String, profile: inout String) -> String {
+        var modifiedCommand = command
+        let components = command.split(separator: " ")
+
+        if let index = components.firstIndex(of: "--profile".split(separator: " ")[0]) {
+            if index + 1 < components.count {
+                let profileValue = components[index + 1]
+                profile = profileValue.trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+
+                modifiedCommand = components.enumerated().compactMap { (i, element) in
+                    if i == index || i == index + 1 {
+                        return nil // Skip the --profile and its value
+                    }
+                    return String(element)
+                }.joined(separator: " ")
+            }
+        }
+
+        return modifiedCommand
     }
 
 }
